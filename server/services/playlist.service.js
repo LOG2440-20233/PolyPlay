@@ -22,7 +22,7 @@ class PlaylistService {
    * @returns {Promise<Array>} la liste de toutes les playlists
    */
   async getAllPlaylists () {
-    return [];
+    return await this.collection.find({}).toArray();
   }
 
   /**
@@ -32,7 +32,7 @@ class PlaylistService {
    * @returns Retourne la playlist en fonction de son id
    */
   async getPlaylistById (id) {
-    return { id: -1 };
+    return await this.collection.findOne({ id });
   }
 
   /**
@@ -44,8 +44,8 @@ class PlaylistService {
   async addPlaylist (playlist) {
     playlist.id = randomUUID();
     await this.savePlaylistThumbnail(playlist);
-    return playlist;
-  }
+    await this.collection.insertOne(playlist);
+    return playlist;  }
 
   /**
    * TODO : Implémenter la mise à jour d'une playlit existante
@@ -53,8 +53,10 @@ class PlaylistService {
    * @param {Object} playlist nouveau contenu de la playlist
    */
   async updatePlaylist (playlist) {
-    delete playlist._id; // _id est immutable
+    const { id } = playlist;
+    delete playlist._id; // _id is immutable
     await this.savePlaylistThumbnail(playlist);
+    await this.collection.updateOne({ id }, { $set: playlist });
   }
 
   /**
@@ -123,9 +125,14 @@ class PlaylistService {
    * @returns toutes les playlists qui ont le mot clé cherché dans leur contenu (name, description)
    */
   async search (substring, exact) {
-    const filter = { name: { $regex: `${substring}`, $options: "i" } };
-    const playlists = await this.collection.find(filter).toArray();
-    return playlists;
+    const regexOptions = exact ? "" : "i";
+    const filter = {
+      $or: [
+        { name: { $regex: substring, $options: regexOptions } },
+        { description: { $regex: substring, $options: regexOptions } }
+      ]
+    };
+    return await this.collection.find(filter).toArray();
   }
 
   async populateDb () {

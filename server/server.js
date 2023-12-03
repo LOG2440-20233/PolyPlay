@@ -6,6 +6,8 @@ const searchBarRouter = require("./routes/search_bar");
 const DB_CONSTS = require("./utils/env");
 const { dbService } = require('./services/database.service');
 const cors = require("cors");
+const playlistsData = require('./data/playlists.json').playlists;
+const songsData = require('./data/songs.json').songs;
 
 const app = express();
 const PORT = 5020;
@@ -31,6 +33,8 @@ app.use("/api/search", searchBarRouter.router);
 const server = app.listen(PORT, () => {
   dbService.connectToServer(DB_CONSTS.DB_URL).then(() => {
     // TODO : populer la BD avec les valeurs par défaut
+    dbService.populateDb('playlists', playlistsData);
+    dbService.populateDb('songs', songsData);
     // eslint-disable-next-line no-console
     console.log(`Listening on port ${PORT}.`);
   });

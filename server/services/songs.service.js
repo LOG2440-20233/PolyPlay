@@ -22,7 +22,7 @@ class SongService {
    * @returns {Promise<Array>}
    */
   async getAllSongs () {
-    return [];
+    return await this.collection.find({}).toArray();
   }
 
   /**
@@ -33,7 +33,7 @@ class SongService {
    * @returns chanson correspondant à l'id
    */
   async getSongById (id) {
-    return { id: -1 };
+    return await this.collection.findOne({ id });
   }
 
   /**
@@ -44,8 +44,10 @@ class SongService {
    * @returns {boolean} le nouveau état aimé de la chanson
    */
   async updateSongLike (id) {
-    return false;
-  }
+    const song = await this.getSongById(id);
+    const newLikedStatus = !song.liked;
+    await this.collection.updateOne({ id }, { $set: { liked: newLikedStatus } });
+    return newLikedStatus;  }
 
   /**
    * TODO : Implémenter la recherche pour les 3 champs des chansons (name, artist et genre).
@@ -59,9 +61,15 @@ class SongService {
    * @returns toutes les chansons qui ont le mot clé cherché dans leur contenu (name, artist, genre)
    */
   async search (substring, exact) {
-    const filter = { name: { $regex: `${substring}`, $options: "i" } };
-    const songs = await this.collection.find(filter).toArray();
-    return songs;
+    const regexOptions = exact ? "" : "i";
+    const filter = {
+      $or: [
+        { name: { $regex: substring, $options: regexOptions } },
+        { artist: { $regex: substring, $options: regexOptions } },
+        { genre: { $regex: substring, $options: regexOptions } }
+      ]
+    };
+    return await this.collection.find(filter).toArray();
   }
 
   async populateDb () {

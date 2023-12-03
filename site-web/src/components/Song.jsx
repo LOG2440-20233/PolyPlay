@@ -13,26 +13,32 @@ export default function Song({ song, index }) {
   };
 
   const playSong = () => {
-    dispatch({ type: ACTIONS.PLAY, payload: { index: - 1 } });
+    dispatch({ type: ACTIONS.PLAY, payload: { index: index - 1 } });
   };
   return (
     <section
       className="song-item flex-row"
       onClick={() => {
         {/*TODO : joueur une chanson seulement si index existe */ }
-        playSong();
+        if (index !== undefined) {
+          playSong();
+        }
       }}
     >
       {index ? <span>{index}</span> : <></>}
       {/*TODO : ajouter les informations de la chanson */}
-      <p>TODO : Whip</p>
-      <p>TODO : Electronic</p>
-      <p>TODO : prazkhanal</p>
+      <p>{song.name}</p>
+      <p>{song.genre}</p>
+      <p>{song.artist}</p>
 
       {/*TODO : modifier le statut aimé seulement si index n'existe pas */}
       <button
         className={`${liked ? "fa" : "fa-regular"} fa-2x fa-heart`}
-        onClick={() => { }}
+        onClick={() => {
+          if (index === undefined) {
+            toggleLike();
+          }
+         }}
       ></button>
     </section>
   );

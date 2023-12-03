@@ -26,7 +26,7 @@ export default function Playlist() {
     setPlaylist(playlist);
     setSongs(songsToLoad);
     // TODO : charger les bonnes données dans votre reducer
-    dispatch({ type: "TODO" });
+    dispatch({ type: ACTIONS.LOAD, payload: { songs: songsToLoad } });
   };
 
   return (
@@ -46,9 +46,9 @@ export default function Playlist() {
           </NavLink>
         </header>
         <section id="song-container" className="flex-column">
-          {/*TODO : afficher toutes les chansons dans la page.
-          Chaque chanson doit avoir un numéro commençant par 1 qui indique son ordre dans la liste*/}
-          <Song song={{ name: 'todo', genre: 'todi' }} index={-1} />
+          {songs.map((song, index) => (
+            <Song key={song.id} song={song} index={index + 1} />
+          ))}
         </section>
       </div>
     </main>
