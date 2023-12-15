@@ -15,10 +15,15 @@ Quelques astuces :
 
 | **Exigences**                                 | **Note** | **Points** |
 | --------------------------------------------- | :------: | :--------: |
-| Implémentation des services du serveur        |    0     |     6      |
-| Implémentation des composantes de pages React |    0     |     5      |
-| Implémentation des autres composantes React   |    0     |     5      |
-| Structure du code                             |    0     |     2      |
+| Implémentation des services du serveur        |    6     |     6      |
+| Implémentation des composantes de pages React |    5     |     5      |
+| Implémentation des autres composantes React   |    5     |     5      |
+| Structure du code                             |    2     |     2      |
 | Qualité et clarté du code                     |    0     |     2      |
 | Bonus                                         |    0     |     1      |
-| **Total**                                     |  **0**   |   **20**   |
+| **Total**                                     |  **18**   |   **20**   |
+
+# Correction 
+- `npm run lint` (-2 points)
+- Tout fonctionne, dommage pour la qualit de code :( 
+- Bon travail :)
